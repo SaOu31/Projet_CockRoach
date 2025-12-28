@@ -1,0 +1,18 @@
+# Ignorer les données brutes de CockroachDB (très lourd)
+cockroach-data\ 2/
+roach1/
+roach2/
+roach3/
+
+# Ignorer les archives de backup (déjà sauvegardées sur MinIO)
+*.tar
+*.tar.gz
+*.zip
+
+# Ignorer les fichiers système macOS
+.DS_Store
+
+# Ignorer les environnements virtuels Python (si tu en as un)
+venv/
+.venv/
+__pycache__/

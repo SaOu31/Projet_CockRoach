@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  roach1:
+    image: cockroachdb/cockroach:v23.1.0
+    container_name: roach1
+    hostname: roach1
+    volumes:
+      - ./cockroach-data/roach1:/cockroach/cockroach-data
+    networks:
+      - roachnet
+    ports:
+      - "26257:26257"
+      - "8080:8080"
+    command: start --insecure --join=roach1,roach2,roach3
+
+  roach2:
+    image: cockroachdb/cockroach:v23.1.0
+    container_name: roach2
+    hostname: roach2
+    volumes:
+      - ./cockroach-data/roach2:/cockroach/cockroach-data
+    networks:
+      - roachnet
+    command: start --insecure --join=roach1,roach2,roach3
+
+  roach3:
+    image: cockroachdb/cockroach:v23.1.0
+    container_name: roach3
+    hostname: roach3
+    volumes:
+      - ./cockroach-data/roach3:/cockroach/cockroach-data
+    networks:
+      - roachnet
+    command: start --insecure --join=roach1,roach2,roach3
+
+  minio:
+    image: minio/minio
+    container_name: minio
+    ports:
+      - "9000:9000"    
+      - "9001:9001"    
+    networks:
+      - roachnet
+    environment:
+      MINIO_ROOT_USER: admin
+      MINIO_ROOT_PASSWORD: password123
+    command: server /data --console-address ":9001"
+
+networks:
+  roachnet:
+    driver: bridge
